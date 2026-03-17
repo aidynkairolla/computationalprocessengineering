@@ -1,32 +1,164 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="6de7d937-5b2f-4a9a-b407-edcd949c4b58" name="Changes" comment="" />
+    <list default="true" id="6de7d937-5b2f-4a9a-b407-edcd949c4b58" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Water–Gas Shift Reaction.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Practice2.Solution.py" beforeDir="false" afterPath="$PROJECT_DIR$/Practice2.Solution.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ubung3.1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Ubung3.1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ubung3.2.py" beforeDir="false" afterPath="$PROJECT_DIR$/Ubung3.2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mid1_1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Reaction rate computation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mid2.py" beforeDir="false" afterPath="$PROJECT_DIR$/mid2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mid2_1.py" beforeDir="false" afterPath="$PROJECT_DIR$/VLE.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;aidynkairolla&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/aidynkairolla/computationalprocessengineering.git&quot;,
+    &quot;accountId&quot;: &quot;636dec09-3d01-441f-801f-e1c7d5135235&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="34VtRYBht487Hx7uNSR2IBS0Ric" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.Practice2.Solution.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Ubung1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Ubung3.1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Ubung3.2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Ubung3.executor&quot;: &quot;Run&quot;,
+    &quot;Python.VLE.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mid1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mid1_1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mid2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mid2_1.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/.venv" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.VLE">
+    <configuration name="Reaction rate computation" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ComputetionalProcessEngineering" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Reaction rate computation.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="VLE" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ComputetionalProcessEngineering" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/VLE.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Water–Gas Shift Reaction" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ComputetionalProcessEngineering" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Water–Gas Shift Reaction.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.VLE" />
+        <item itemvalue="Python.Water–Gas Shift Reaction" />
+        <item itemvalue="Python.Reaction rate computation" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -43,8 +175,47 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1761310558920</updated>
-      <workItem from="1761310560978" duration="1000" />
+      <workItem from="1761310560978" duration="2717000" />
+      <workItem from="1763127294245" duration="1358000" />
+      <workItem from="1763128659330" duration="2655000" />
+      <workItem from="1764259230225" duration="278000" />
+      <workItem from="1766670521642" duration="2776000" />
+      <workItem from="1767467621266" duration="371000" />
+      <workItem from="1767965365628" duration="1361000" />
+      <workItem from="1767966793914" duration="2363000" />
+      <workItem from="1768981268786" duration="827000" />
+      <workItem from="1769515007924" duration="5482000" />
+      <workItem from="1769522923736" duration="12742000" />
+      <workItem from="1769596176126" duration="1673000" />
+      <workItem from="1769604161101" duration="746000" />
+      <workItem from="1769604912905" duration="2144000" />
+      <workItem from="1769625192667" duration="1103000" />
+      <workItem from="1769701838537" duration="653000" />
+      <workItem from="1769702529870" duration="3259000" />
+      <workItem from="1770841850344" duration="65000" />
+      <workItem from="1771964148281" duration="890000" />
+      <workItem from="1771965104382" duration="100000" />
+      <workItem from="1773741208537" duration="1548000" />
+      <workItem from="1773742764353" duration="1085000" />
+      <workItem from="1773743894466" duration="143000" />
+      <workItem from="1773744093793" duration="76000" />
+      <workItem from="1773744174690" duration="1480000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ubung3.coverage" NAME="Ubung3 Coverage Results" MODIFIED="1763129271245" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$mid2_1.coverage" NAME="mid2_1 Coverage Results" MODIFIED="1773743899886" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ubung3_2.coverage" NAME="Ubung3.2 Coverage Results" MODIFIED="1763131031904" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Practice2_Solution.coverage" NAME="Practice2.Solution Coverage Results" MODIFIED="1764259261453" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$mid1.coverage" NAME="mid1 Coverage Results" MODIFIED="1767966802405" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$mid1_1.coverage" NAME="mid1_1 Coverage Results" MODIFIED="1769624362755" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ubung3_1.coverage" NAME="Ubung3.1 Coverage Results" MODIFIED="1764259281545" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ubung1.coverage" NAME="Ubung1 Coverage Results" MODIFIED="1761310689451" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$VLE.coverage" NAME="VLE Coverage Results" MODIFIED="1773743956734" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$mid2.coverage" NAME="mid2 Coverage Results" MODIFIED="1769517219551" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

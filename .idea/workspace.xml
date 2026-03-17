@@ -4,15 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6de7d937-5b2f-4a9a-b407-edcd949c4b58" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Water–Gas Shift Reaction.py" afterDir="false" />
+    <list default="true" id="6de7d937-5b2f-4a9a-b407-edcd949c4b58" name="Changes" comment="init commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Practice2.Solution.py" beforeDir="false" afterPath="$PROJECT_DIR$/Practice2.Solution.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ubung3.1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Ubung3.1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Ubung3.2.py" beforeDir="false" afterPath="$PROJECT_DIR$/Ubung3.2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mid1_1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Reaction rate computation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mid2.py" beforeDir="false" afterPath="$PROJECT_DIR$/mid2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mid2_1.py" beforeDir="false" afterPath="$PROJECT_DIR$/VLE.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VLE.py" beforeDir="false" afterPath="$PROJECT_DIR$/VLE.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,29 +46,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.Practice2.Solution.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Ubung1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Ubung3.1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Ubung3.2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Ubung3.executor&quot;: &quot;Run&quot;,
-    &quot;Python.VLE.executor&quot;: &quot;Run&quot;,
-    &quot;Python.mid1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.mid1_1.executor&quot;: &quot;Run&quot;,
-    &quot;Python.mid2.executor&quot;: &quot;Run&quot;,
-    &quot;Python.mid2_1.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.Practice2.Solution.executor": "Run",
+    "Python.Ubung1.executor": "Run",
+    "Python.Ubung3.1.executor": "Run",
+    "Python.Ubung3.2.executor": "Run",
+    "Python.Ubung3.executor": "Run",
+    "Python.VLE.executor": "Run",
+    "Python.Water–Gas Shift Reaction.executor": "Run",
+    "Python.mid1.executor": "Run",
+    "Python.mid1_1.executor": "Run",
+    "Python.mid2.executor": "Run",
+    "Python.mid2_1.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -153,8 +148,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.VLE" />
         <item itemvalue="Python.Water–Gas Shift Reaction" />
+        <item itemvalue="Python.VLE" />
         <item itemvalue="Python.Reaction rate computation" />
       </list>
     </recent_temporary>
@@ -199,12 +194,25 @@
       <workItem from="1773742764353" duration="1085000" />
       <workItem from="1773743894466" duration="143000" />
       <workItem from="1773744093793" duration="76000" />
-      <workItem from="1773744174690" duration="1480000" />
+      <workItem from="1773744174690" duration="4469000" />
     </task>
+    <task id="LOCAL-00001" summary="init commit">
+      <option name="closed" value="true" />
+      <created>1773746284878</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1773746284878</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="init commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="init commit" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ubung3.coverage" NAME="Ubung3 Coverage Results" MODIFIED="1763129271245" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -213,9 +221,10 @@
     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Practice2_Solution.coverage" NAME="Practice2.Solution Coverage Results" MODIFIED="1764259261453" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$mid1.coverage" NAME="mid1 Coverage Results" MODIFIED="1767966802405" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$mid1_1.coverage" NAME="mid1_1 Coverage Results" MODIFIED="1769624362755" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$WaterGas_Shift_Reaction.coverage" NAME="Water–Gas Shift Reaction Coverage Results" MODIFIED="1773748241626" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ubung3_1.coverage" NAME="Ubung3.1 Coverage Results" MODIFIED="1764259281545" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ubung1.coverage" NAME="Ubung1 Coverage Results" MODIFIED="1761310689451" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$VLE.coverage" NAME="VLE Coverage Results" MODIFIED="1773743956734" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$VLE.coverage" NAME="VLE Coverage Results" MODIFIED="1773748071904" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$mid2.coverage" NAME="mid2 Coverage Results" MODIFIED="1769517219551" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

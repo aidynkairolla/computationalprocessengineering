@@ -119,7 +119,7 @@ def compute_energy(z, xF, yF, xd, xb):
     Qc = -(RG + 1) * safe_mean((z - xb) / (xd - xb + eps))
     Qb = RL * safe_mean((xd - z) / (xd - xb + eps))
 
-    return Qc, Qb
+    return Qc, Qb # over Feed * evapuration enthalpy
 
 
 # =========================

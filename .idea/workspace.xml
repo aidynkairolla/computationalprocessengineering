@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6de7d937-5b2f-4a9a-b407-edcd949c4b58" name="Changes" comment="init commit">
+    <list default="true" id="6de7d937-5b2f-4a9a-b407-edcd949c4b58" name="Changes" comment="Heat map ternary diagram for a/c-path rectification of zeotrope mixture">
+      <change afterPath="$PROJECT_DIR$/Energy demand.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VLE.py" beforeDir="false" afterPath="$PROJECT_DIR$/VLE.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VLE.py" beforeDir="false" afterPath="$PROJECT_DIR$/Ternary Heat Map Diagram.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +49,9 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.Energy demand.executor": "Run",
     "Python.Practice2.Solution.executor": "Run",
+    "Python.Ternary Heat Map Diagram.executor": "Run",
     "Python.Ubung1.executor": "Run",
     "Python.Ubung3.1.executor": "Run",
     "Python.Ubung3.2.executor": "Run",
@@ -76,7 +79,30 @@
       <recent name="$PROJECT_DIR$/.venv" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.VLE">
+  <component name="RunManager" selected="Python.Ternary Heat Map Diagram">
+    <configuration name="Energy demand" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ComputetionalProcessEngineering" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Energy demand.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="Reaction rate computation" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ComputetionalProcessEngineering" />
       <option name="ENV_FILES" value="" />
@@ -100,7 +126,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="VLE" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="Ternary Heat Map Diagram" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ComputetionalProcessEngineering" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -114,7 +140,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/VLE.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Ternary Heat Map Diagram.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -148,8 +174,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Ternary Heat Map Diagram" />
+        <item itemvalue="Python.Energy demand" />
         <item itemvalue="Python.Water–Gas Shift Reaction" />
-        <item itemvalue="Python.VLE" />
         <item itemvalue="Python.Reaction rate computation" />
       </list>
     </recent_temporary>
@@ -194,7 +221,8 @@
       <workItem from="1773742764353" duration="1085000" />
       <workItem from="1773743894466" duration="143000" />
       <workItem from="1773744093793" duration="76000" />
-      <workItem from="1773744174690" duration="4469000" />
+      <workItem from="1773744174690" duration="7447000" />
+      <workItem from="1773753039326" duration="2462000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <option name="closed" value="true" />
@@ -204,7 +232,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773746284878</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Heat map ternary diagram for a/c-path rectification of zeotrope mixture">
+      <option name="closed" value="true" />
+      <created>1773749019557</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1773749019557</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -212,19 +248,22 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="init commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="init commit" />
+    <MESSAGE value="Heat map ternary diagram for a/c-path rectification of zeotrope mixture" />
+    <option name="LAST_COMMIT_MESSAGE" value="Heat map ternary diagram for a/c-path rectification of zeotrope mixture" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ubung3.coverage" NAME="Ubung3 Coverage Results" MODIFIED="1763129271245" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$mid2_1.coverage" NAME="mid2_1 Coverage Results" MODIFIED="1773743899886" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ubung3_2.coverage" NAME="Ubung3.2 Coverage Results" MODIFIED="1763131031904" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Practice2_Solution.coverage" NAME="Practice2.Solution Coverage Results" MODIFIED="1764259261453" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$mid1.coverage" NAME="mid1 Coverage Results" MODIFIED="1767966802405" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$mid1_1.coverage" NAME="mid1_1 Coverage Results" MODIFIED="1769624362755" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ternary_Heat_Map_Diagram.coverage" NAME="Ternary Heat Map Diagram Coverage Results" MODIFIED="1773754605317" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$WaterGas_Shift_Reaction.coverage" NAME="Water–Gas Shift Reaction Coverage Results" MODIFIED="1773748241626" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ubung3_1.coverage" NAME="Ubung3.1 Coverage Results" MODIFIED="1764259281545" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ubung1.coverage" NAME="Ubung1 Coverage Results" MODIFIED="1761310689451" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$VLE.coverage" NAME="VLE Coverage Results" MODIFIED="1773748071904" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Energy_demand.coverage" NAME="Energy demand Coverage Results" MODIFIED="1773755266041" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ubung3.coverage" NAME="Ubung3 Coverage Results" MODIFIED="1763129271245" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$mid2_1.coverage" NAME="mid2_1 Coverage Results" MODIFIED="1773743899886" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Practice2_Solution.coverage" NAME="Practice2.Solution Coverage Results" MODIFIED="1764259261453" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ubung1.coverage" NAME="Ubung1 Coverage Results" MODIFIED="1761310689451" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$mid2.coverage" NAME="mid2 Coverage Results" MODIFIED="1769517219551" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

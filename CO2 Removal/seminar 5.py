@@ -17,7 +17,6 @@ Nz = 100
 z = np.linspace(0.0, L, Nz + 1)
 dz = z[1] - z[0]
 
-z_internal = z[1:]
 n = Nz
 
 t_start = 0.0
@@ -25,30 +24,29 @@ t_end = 30000.0
 t_eval = np.linspace(t_start, t_end, 400)
 
 
-def isotherm_coefficient(isotherm):
-    if isotherm == "linear":
-        return 4.715
-
-    if isotherm == "freundlich":
-        return 82.68 * np.sqrt(cin)
-
-    raise ValueError("Unknown isotherm. Use 'linear' or 'freundlich'.")
-
-
 def calculate_model_coefficients(isotherm):
-    dXdc = isotherm_coefficient(isotherm)
+    if isotherm == "linear":
+        dXdc_for_Deff = 4.715
+        dXdc_for_loading = 4.715
 
-    K = rho_s / eps_p * dXdc
+    elif isotherm == "freundlich":
+        dXdc_for_Deff = 82.68 * np.sqrt(cin)
+        dXdc_for_loading = 82.68 * np.sqrt(cin) / cin
+
+    else:
+        raise ValueError("Unknown isotherm. Use 'linear' or 'freundlich'.")
+
+    K = rho_s / eps_p * dXdc_for_Deff
     Deff = D / (1.0 + K)
 
     k1 = (1.0 - eps_bed) / eps_bed * rho_s
-    k2 = 15.0 * Deff / (Rp**2) * dXdc
     k3 = 15.0 * Deff / (Rp**2)
+    k2 = k3 * dXdc_for_loading
 
     a1 = -u / eps_bed
     b1 = Dax
 
-    return dXdc, Deff, k1, k2, k3, a1, b1
+    return dXdc_for_loading, Deff, k1, k2, k3, a1, b1
 
 
 def build_matrices(a1, b1):
@@ -87,6 +85,7 @@ def ode_system(t, y, M1, M2, d1, d2, k1, k2, k3):
     X = y[n:]
 
     dXdt = k2 * c - k3 * X
+
     source_c = -k1 * dXdt
 
     dcdt = M1 @ c + M2 @ c + d1 + d2 + source_c
@@ -156,7 +155,7 @@ for isotherm, result in results.items():
     print(f"k3   = {result['k3']:.6e}")
 
 
-time_to_plot = 12964.82412
+times_to_plot = np.arange(t_start, t_end + 1.0, 3000.0)
 
 for isotherm, result in results.items():
     t = result["t"]
@@ -164,37 +163,57 @@ for isotherm, result in results.items():
     c = result["c"]
     X = result["X"]
 
-    time_index = np.argmin(np.abs(t - time_to_plot))
-
     plt.figure()
-    plt.plot(z_plot, c[:, time_index])
+
+    for time_value in times_to_plot:
+        time_index = np.argmin(np.abs(t - time_value))
+        plt.plot(z_plot, c[:, time_index], label=f"{t[time_index]:.0f} s")
+
     plt.xlabel("z (m)")
     plt.ylabel("c (kg/m³)")
-    plt.title(f"Concentration profile, {isotherm} isotherm, t = {t[time_index]:.2f} s")
+    plt.title(f"Concentration profiles over time, {isotherm} isotherm")
     plt.grid(True)
-    plt.savefig(f"concentration_{isotherm}.png", dpi=300)
+    plt.legend()
+    plt.savefig(f"concentration_profiles_{isotherm}.png", dpi=300)
     plt.show()
 
     plt.figure()
-    plt.plot(z_plot, X[:, time_index])
+
+    for time_value in times_to_plot:
+        time_index = np.argmin(np.abs(t - time_value))
+        plt.plot(z_plot, X[:, time_index], label=f"{t[time_index]:.0f} s")
+
     plt.xlabel("z (m)")
     plt.ylabel("X (kg/kg)")
-    plt.title(f"Loading profile, {isotherm} isotherm, t = {t[time_index]:.2f} s")
+    plt.title(f"Loading profiles over time, {isotherm} isotherm")
     plt.grid(True)
-    plt.savefig(f"loading_{isotherm}.png", dpi=300)
+    plt.legend()
+    plt.savefig(f"loading_profiles_{isotherm}.png", dpi=300)
     plt.show()
 
 
 for isotherm, result in results.items():
-    final_c = result["c"][:, -1]
-    final_X = result["X"][:, -1]
+    t = result["t"]
+    c = result["c"]
+    X = result["X"]
 
-    output = np.column_stack([z, final_c, final_X])
+    output_rows = []
+
+    for time_index in range(len(t)):
+        for z_index in range(len(z)):
+            output_rows.append([
+                t[time_index],
+                z[z_index],
+                c[z_index, time_index],
+                X[z_index, time_index]
+            ])
+
+    output = np.array(output_rows)
 
     np.savetxt(
-        f"fixed_bed_result_{isotherm}.txt",
+        f"fixed_bed_all_results_{isotherm}.txt",
         output,
-        header="z_m c_kg_per_m3 X_kg_per_kg",
+        header="t_s z_m c_kg_per_m3 X_kg_per_kg",
         comments=""
     )
 

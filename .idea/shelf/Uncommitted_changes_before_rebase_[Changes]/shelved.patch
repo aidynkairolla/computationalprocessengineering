@@ -1,0 +1,604 @@
+Index: Ternary Heat Map Diagram.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import numpy as np\nimport matplotlib.pyplot as plt\nimport matplotlib.tri as tri\n\n# =========================\n# Antoine Parameters\n# =========================\nA = np.array([9.3251, 9.2876, 9.3240])\nB = np.array([1348.18, 1388.10, 1467.44])\nC = np.array([-51.1717, -56.8825, -59.2760])\n\nP_total = 101325\n\n\n# =========================\n# Thermodynamics\n# =========================\ndef p_sat(T):\n    return 10 ** (A - B / (C + T))\n\n\ndef bubble_temperature(x):\n    T = np.dot(x, [363, 390, 410])\n\n    for _ in range(50):\n        ps = p_sat(T)\n        f = P_total - np.sum(x * ps)\n\n        if abs(f) < 1e-5:\n            return T\n\n        dps = ps * np.log(10) * (B / (C + T)**2)\n        df = -np.sum(x * dps)\n\n        if abs(df) < 1e-10:\n            return None\n\n        T_new = T - f / df\n\n        if abs(T_new - T) > 20:\n            T_new = T + np.sign(T_new - T) * 20\n\n        T = T_new\n\n    return None\n\n\ndef vapor_y(x, T):\n    ps = p_sat(T)\n    y = x * ps / P_total\n    return y / np.sum(y)\n\n\n# =========================\n# Geometry\n# =========================\ndef to_xy(x):\n    x1, x2, x3 = x\n    X = 0.5 * (2*x2 + x3)\n    Y = (np.sqrt(3)/2) * x3\n    return X, Y\n\n\ndef from_xy(X, Y):\n    x3 = Y / (np.sqrt(3)/2) #60 degrees\n    x2 = X - 0.5*x3\n    x1 = 1 - x2 - x3\n    return np.array([x1, x2, x3])\n\n\n# =========================\n# Find edge intersections\n# =========================\ndef find_products(x, y):\n    p1 = np.array(to_xy(x))\n    p2 = np.array(to_xy(y))\n\n    pts = []\n\n    for t in np.linspace(-0.5, 1.5, 300):  # extend line\n        p = p1 + t * (p2 - p1)\n        comp = from_xy(p[0], p[1])\n\n        if np.all(comp >= -0.01):\n            if np.any(np.abs(comp) < 0.01):\n                pts.append(comp)\n\n    if len(pts) < 2:\n        return None, None\n\n    pts = sorted(pts, key=lambda c: c[2])  # DEC sorting\n\n    return pts[0], pts[-1]\n\n\n# =========================\n# Energy\n# =========================\ndef safe_mean(arr):\n    arr = arr[np.isfinite(arr)]\n    if len(arr) == 0:\n        return None\n    return np.mean(arr)\n\n\ndef compute_energy(z, xF, yF, xd, xb):\n    eps = 1e-8\n\n    denom = (yF - xF)\n    if np.any(np.abs(denom) < 1e-6):\n        return None, None\n\n    RG = safe_mean((xF - xb) / (denom + eps))\n    RL = safe_mean((xd - yF) / (denom + eps))\n\n    if RG is None or RL is None:\n        return None, None\n\n    Qc = -(RG + 1) * safe_mean((z - xb) / (xd - xb + eps))\n    Qb = RL * safe_mean((xd - z) / (xd - xb + eps))\n\n    return Qc, Qb # over Feed * evapuration enthalpy\n\n\n# =========================\n# FULL GRID\n# =========================\ndef generate(N=40):\n    pts = []\n    Qc_vals = []\n    Qb_vals = []\n\n    for i in range(1, N):\n        for j in range(1, N - i):\n            x1 = i / N\n            x2 = j / N\n            x3 = 1 - x1 - x2\n\n            x = np.array([x1, x2, x3])\n\n            try:\n                T = bubble_temperature(x)\n                if T is None:\n                    continue\n\n                y = vapor_y(x, T)\n\n                xd, xb = find_products(x, y)\n                if xd is None:\n                    continue\n\n                Qc, Qb = compute_energy(x, x, y, xd, xb)\n                if Qc is None:\n                    continue\n\n                X, Y = to_xy(x)\n\n                pts.append([X, Y])\n                Qc_vals.append(Qc)\n                Qb_vals.append(Qb)\n\n            except:\n                continue\n\n    return np.array(pts), np.array(Qc_vals), np.array(Qb_vals)\n\n\n# =========================\n# Plot\n# =========================\ndef plot_map(pts, values, title):\n    if len(pts) == 0:\n        print(\"No data to plot\")\n        return\n\n    x = pts[:,0]\n    y = pts[:,1]\n\n    triang = tri.Triangulation(x, y)\n\n    plt.figure(figsize=(7,6))\n    plt.tricontourf(triang, values, levels=40, cmap='plasma')\n\n    triangle = np.array([\n        to_xy([1,0,0]),\n        to_xy([0,1,0]),\n        to_xy([0,0,1]),\n        to_xy([1,0,0])\n    ])\n    plt.plot(triangle[:,0], triangle[:,1], 'k')\n\n    plt.title(title)\n    plt.xticks([])\n    plt.yticks([])\n    plt.colorbar()\n    plt.show()\n\n\n# =========================\n# MAIN\n# =========================\nif __name__ == \"__main__\":\n    print(\"Generating grid...\")\n    pts, Qc_vals, Qb_vals = generate(N=35)\n\n    print(\"Points computed:\", len(pts))\n\n    plot_map(pts, Qc_vals, \"Qc,min / (F*r)\")\n    plot_map(pts, Qb_vals, \"Qb,min / (F*r)\")
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Ternary Heat Map Diagram.py b/Ternary Heat Map Diagram.py
+--- a/Ternary Heat Map Diagram.py	(revision e8bdf0fe1666d94877611ba33f2a4092e3add7cc)
++++ b/Ternary Heat Map Diagram.py	(date 1773828096268)
+@@ -1,9 +1,10 @@
+ import numpy as np
+ import matplotlib.pyplot as plt
+ import matplotlib.tri as tri
++from scipy.optimize import newton
+ 
+ # =========================
+-# Antoine Parameters
++# Antoine parameters
+ # =========================
+ A = np.array([9.3251, 9.2876, 9.3240])
+ B = np.array([1348.18, 1388.10, 1467.44])
+@@ -19,30 +20,20 @@
+     return 10 ** (A - B / (C + T))
+ 
+ 
+-def bubble_temperature(x):
+-    T = np.dot(x, [363, 390, 410])
++def bubble_T(x):
++    def f(T):
++        return P_total - np.sum(x * p_sat(T))
+ 
+-    for _ in range(50):
++    def df(T):
+         ps = p_sat(T)
+-        f = P_total - np.sum(x * ps)
+-
+-        if abs(f) < 1e-5:
+-            return T
++        return -np.sum(x * ps * np.log(10) * (B / (C + T)**2))
+ 
+-        dps = ps * np.log(10) * (B / (C + T)**2)
+-        df = -np.sum(x * dps)
++    T0 = np.dot(x, [363, 390, 410])
+ 
+-        if abs(df) < 1e-10:
+-            return None
+-
+-        T_new = T - f / df
+-
+-        if abs(T_new - T) > 20:
+-            T_new = T + np.sign(T_new - T) * 20
+-
+-        T = T_new
+-
+-    return None
++    try:
++        return newton(f, T0, fprime=df, tol=1e-6, maxiter=50)
++    except:
++        return None
+ 
+ 
+ def vapor_y(x, T):
+@@ -51,6 +42,57 @@
+     return y / np.sum(y)
+ 
+ 
++# =========================
++# a–c PATH
++# =========================
++def compute_ac_path(xF, yF):
++    eps = 1e-8
++
++    # RL from DEC
++    if abs(xF[2] - yF[2]) < 1e-6:
++        return None
++
++    RL = yF[2] / (xF[2] - yF[2] + eps)
++
++    # RG from DMC
++    if abs(yF[0] - xF[0]) < 1e-6:
++        return None
++
++    RG = xF[0] / (yF[0] - xF[0] + eps)
++
++    # Distillate
++    xD = (RL + 1) * yF - RL * xF
++    xD[2] = 0
++    if np.sum(xD) <= 0:
++        return None
++    xD = xD / np.sum(xD)
++
++    # Bottom
++    xB = (RG + 1) * xF - RG * yF
++    xB[0] = 0
++    if np.sum(xB) <= 0:
++        return None
++    xB = xB / np.sum(xB)
++
++    return RL, RG, xD, xB
++
++
++# =========================
++# Energy
++# =========================
++def compute_energy(z, xD, xB, RL, RG):
++    eps = 1e-8
++
++    denom = (xD - xB)
++    if np.any(np.abs(denom) < 1e-6):
++        return None, None
++
++    Qc = -(RG + 1) * np.mean((z - xB) / (denom + eps))
++    Qb = RL * np.mean((xD - z) / (denom + eps))
++
++    return Qc, Qb
++
++
+ # =========================
+ # Geometry
+ # =========================
+@@ -61,69 +103,8 @@
+     return X, Y
+ 
+ 
+-def from_xy(X, Y):
+-    x3 = Y / (np.sqrt(3)/2) #60 degrees
+-    x2 = X - 0.5*x3
+-    x1 = 1 - x2 - x3
+-    return np.array([x1, x2, x3])
+-
+-
+-# =========================
+-# Find edge intersections
+-# =========================
+-def find_products(x, y):
+-    p1 = np.array(to_xy(x))
+-    p2 = np.array(to_xy(y))
+-
+-    pts = []
+-
+-    for t in np.linspace(-0.5, 1.5, 300):  # extend line
+-        p = p1 + t * (p2 - p1)
+-        comp = from_xy(p[0], p[1])
+-
+-        if np.all(comp >= -0.01):
+-            if np.any(np.abs(comp) < 0.01):
+-                pts.append(comp)
+-
+-    if len(pts) < 2:
+-        return None, None
+-
+-    pts = sorted(pts, key=lambda c: c[2])  # DEC sorting
+-
+-    return pts[0], pts[-1]
+-
+-
+-# =========================
+-# Energy
+ # =========================
+-def safe_mean(arr):
+-    arr = arr[np.isfinite(arr)]
+-    if len(arr) == 0:
+-        return None
+-    return np.mean(arr)
+-
+-
+-def compute_energy(z, xF, yF, xd, xb):
+-    eps = 1e-8
+-
+-    denom = (yF - xF)
+-    if np.any(np.abs(denom) < 1e-6):
+-        return None, None
+-
+-    RG = safe_mean((xF - xb) / (denom + eps))
+-    RL = safe_mean((xd - yF) / (denom + eps))
+-
+-    if RG is None or RL is None:
+-        return None, None
+-
+-    Qc = -(RG + 1) * safe_mean((z - xb) / (xd - xb + eps))
+-    Qb = RL * safe_mean((xd - z) / (xd - xb + eps))
+-
+-    return Qc, Qb # over Feed * evapuration enthalpy
+-
+-
+-# =========================
+-# FULL GRID
++# GRID
+ # =========================
+ def generate(N=40):
+     pts = []
+@@ -136,24 +117,29 @@
+             x2 = j / N
+             x3 = 1 - x1 - x2
+ 
+-            x = np.array([x1, x2, x3])
++            xF = np.array([x1, x2, x3])
++
++            if min(xF) < 1e-4:
++                continue
+ 
+             try:
+-                T = bubble_temperature(x)
++                T = bubble_T(xF)
+                 if T is None:
+                     continue
+ 
+-                y = vapor_y(x, T)
++                yF = vapor_y(xF, T)
+ 
+-                xd, xb = find_products(x, y)
+-                if xd is None:
++                result = compute_ac_path(xF, yF)
++                if result is None:
+                     continue
+ 
+-                Qc, Qb = compute_energy(x, x, y, xd, xb)
++                RL, RG, xD, xB = result
++
++                Qc, Qb = compute_energy(xF, xD, xB, RL, RG)
+                 if Qc is None:
+                     continue
+ 
+-                X, Y = to_xy(x)
++                X, Y = to_xy(xF)
+ 
+                 pts.append([X, Y])
+                 Qc_vals.append(Qc)
+@@ -166,29 +152,34 @@
+ 
+ 
+ # =========================
+-# Plot
++# Plot (WITH LABELS)
+ # =========================
+ def plot_map(pts, values, title):
+     if len(pts) == 0:
+-        print("No data to plot")
++        print("No data")
+         return
+ 
+-    x = pts[:,0]
+-    y = pts[:,1]
++    x = pts[:, 0]
++    y = pts[:, 1]
+ 
+     triang = tri.Triangulation(x, y)
+ 
+-    plt.figure(figsize=(7,6))
++    plt.figure(figsize=(7, 6))
+     plt.tricontourf(triang, values, levels=40, cmap='plasma')
+ 
+-    triangle = np.array([
+-        to_xy([1,0,0]),
+-        to_xy([0,1,0]),
+-        to_xy([0,0,1]),
+-        to_xy([1,0,0])
+-    ])
+-    plt.plot(triangle[:,0], triangle[:,1], 'k')
++    # Triangle vertices
++    v1 = to_xy([1, 0, 0])  # DMC
++    v2 = to_xy([0, 1, 0])  # EMC
++    v3 = to_xy([0, 0, 1])  # DEC
++
++    triangle = np.array([v1, v2, v3, v1])
++    plt.plot(triangle[:, 0], triangle[:, 1], 'k')
+ 
++    # 🔥 Labels (VERY IMPORTANT)
++    plt.text(v1[0], v1[1]-0.05, "DMC", ha='center', fontsize=12)
++    plt.text(v2[0]+0.05, v2[1], "EMC", ha='left', fontsize=12)
++    plt.text(v3[0], v3[1]+0.05, "DEC", ha='center', fontsize=12)
++
+     plt.title(title)
+     plt.xticks([])
+     plt.yticks([])
+@@ -200,10 +191,11 @@
+ # MAIN
+ # =========================
+ if __name__ == "__main__":
+-    print("Generating grid...")
++    print("Running a–c path model with labeled diagram...")
++
+     pts, Qc_vals, Qb_vals = generate(N=35)
+ 
+-    print("Points computed:", len(pts))
++    print("Points calculated:", len(pts))
+ 
+-    plot_map(pts, Qc_vals, "Qc,min / (F*r)")
+-    plot_map(pts, Qb_vals, "Qb,min / (F*r)")
+\ No newline at end of file
++    plot_map(pts, Qc_vals, "Qc,min / (F*r) — a–c path")
++    plot_map(pts, Qb_vals, "Qb,min / (F*r) — a–c path")
+\ No newline at end of file
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"6de7d937-5b2f-4a9a-b407-edcd949c4b58\" name=\"Changes\" comment=\"Heat map ternary diagram for a/c-path rectification of zeotrope mixture\">\n      <change afterPath=\"$PROJECT_DIR$/Energy demand.py\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/VLE.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Ternary Heat Map Diagram.py\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"Python Script\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"GitHubPullRequestSearchHistory\">{\n  &quot;lastFilter&quot;: {\n    &quot;state&quot;: &quot;OPEN&quot;,\n    &quot;assignee&quot;: &quot;aidynkairolla&quot;\n  }\n}</component>\n  <component name=\"GithubPullRequestsUISettings\">{\n  &quot;selectedUrlAndAccountId&quot;: {\n    &quot;url&quot;: &quot;https://github.com/aidynkairolla/computationalprocessengineering.git&quot;,\n    &quot;accountId&quot;: &quot;636dec09-3d01-441f-801f-e1c7d5135235&quot;\n  }\n}</component>\n  <component name=\"ProjectColorInfo\">{\n  &quot;associatedIndex&quot;: 3\n}</component>\n  <component name=\"ProjectId\" id=\"34VtRYBht487Hx7uNSR2IBS0Ric\" />\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\n  </component>\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\"><![CDATA[{\n  \"keyToString\": {\n    \"Python.Energy demand.executor\": \"Run\",\n    \"Python.Practice2.Solution.executor\": \"Run\",\n    \"Python.Ternary Heat Map Diagram.executor\": \"Run\",\n    \"Python.Ubung1.executor\": \"Run\",\n    \"Python.Ubung3.1.executor\": \"Run\",\n    \"Python.Ubung3.2.executor\": \"Run\",\n    \"Python.Ubung3.executor\": \"Run\",\n    \"Python.VLE.executor\": \"Run\",\n    \"Python.Water–Gas Shift Reaction.executor\": \"Run\",\n    \"Python.mid1.executor\": \"Run\",\n    \"Python.mid1_1.executor\": \"Run\",\n    \"Python.mid2.executor\": \"Run\",\n    \"Python.mid2_1.executor\": \"Run\",\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\n    \"RunOnceActivity.git.unshallow\": \"true\",\n    \"git-widget-placeholder\": \"main\",\n    \"node.js.detected.package.eslint\": \"true\",\n    \"node.js.detected.package.tslint\": \"true\",\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\n    \"nodejs_package_manager_path\": \"npm\",\n    \"vue.rearranger.settings.migration\": \"true\"\n  }\n}]]></component>\n  <component name=\"RecentsManager\">\n    <key name=\"MoveFile.RECENT_KEYS\">\n      <recent name=\"$PROJECT_DIR$\" />\n      <recent name=\"$PROJECT_DIR$/.venv\" />\n    </key>\n  </component>\n  <component name=\"RunManager\" selected=\"Python.Ternary Heat Map Diagram\">\n    <configuration name=\"Energy demand\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"ComputetionalProcessEngineering\" />\n      <option name=\"ENV_FILES\" value=\"\" />\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\n      <option name=\"PARENT_ENVS\" value=\"true\" />\n      <envs>\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\n      </envs>\n      <option name=\"SDK_HOME\" value=\"\" />\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\n      <EXTENSION ID=\"PythonCoverageRunConfigurationExtension\" runner=\"coverage.py\" />\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/Energy demand.py\" />\n      <option name=\"PARAMETERS\" value=\"\" />\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\n      <option name=\"MODULE_MODE\" value=\"false\" />\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\n      <option name=\"INPUT_FILE\" value=\"\" />\n      <method v=\"2\" />\n    </configuration>\n    <configuration name=\"Reaction rate computation\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"ComputetionalProcessEngineering\" />\n      <option name=\"ENV_FILES\" value=\"\" />\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\n      <option name=\"PARENT_ENVS\" value=\"true\" />\n      <envs>\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\n      </envs>\n      <option name=\"SDK_HOME\" value=\"\" />\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\n      <EXTENSION ID=\"PythonCoverageRunConfigurationExtension\" runner=\"coverage.py\" />\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/Reaction rate computation.py\" />\n      <option name=\"PARAMETERS\" value=\"\" />\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\n      <option name=\"MODULE_MODE\" value=\"false\" />\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\n      <option name=\"INPUT_FILE\" value=\"\" />\n      <method v=\"2\" />\n    </configuration>\n    <configuration name=\"Ternary Heat Map Diagram\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"ComputetionalProcessEngineering\" />\n      <option name=\"ENV_FILES\" value=\"\" />\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\n      <option name=\"PARENT_ENVS\" value=\"true\" />\n      <envs>\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\n      </envs>\n      <option name=\"SDK_HOME\" value=\"\" />\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\n      <EXTENSION ID=\"PythonCoverageRunConfigurationExtension\" runner=\"coverage.py\" />\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/Ternary Heat Map Diagram.py\" />\n      <option name=\"PARAMETERS\" value=\"\" />\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\n      <option name=\"MODULE_MODE\" value=\"false\" />\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\n      <option name=\"INPUT_FILE\" value=\"\" />\n      <method v=\"2\" />\n    </configuration>\n    <configuration name=\"Water–Gas Shift Reaction\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"ComputetionalProcessEngineering\" />\n      <option name=\"ENV_FILES\" value=\"\" />\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\n      <option name=\"PARENT_ENVS\" value=\"true\" />\n      <envs>\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\n      </envs>\n      <option name=\"SDK_HOME\" value=\"\" />\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\n      <EXTENSION ID=\"PythonCoverageRunConfigurationExtension\" runner=\"coverage.py\" />\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/Water–Gas Shift Reaction.py\" />\n      <option name=\"PARAMETERS\" value=\"\" />\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\n      <option name=\"MODULE_MODE\" value=\"false\" />\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\n      <option name=\"INPUT_FILE\" value=\"\" />\n      <method v=\"2\" />\n    </configuration>\n    <recent_temporary>\n      <list>\n        <item itemvalue=\"Python.Ternary Heat Map Diagram\" />\n        <item itemvalue=\"Python.Energy demand\" />\n        <item itemvalue=\"Python.Water–Gas Shift Reaction\" />\n        <item itemvalue=\"Python.Reaction rate computation\" />\n      </list>\n    </recent_temporary>\n  </component>\n  <component name=\"SharedIndexes\">\n    <attachedChunks>\n      <set>\n        <option value=\"bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-PY-243.22562.220\" />\n        <option value=\"bundled-python-sdk-0fc6c617c4bd-9a18a617cbe4-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.22562.220\" />\n      </set>\n    </attachedChunks>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"6de7d937-5b2f-4a9a-b407-edcd949c4b58\" name=\"Changes\" comment=\"\" />\n      <created>1761310558920</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1761310558920</updated>\n      <workItem from=\"1761310560978\" duration=\"2717000\" />\n      <workItem from=\"1763127294245\" duration=\"1358000\" />\n      <workItem from=\"1763128659330\" duration=\"2655000\" />\n      <workItem from=\"1764259230225\" duration=\"278000\" />\n      <workItem from=\"1766670521642\" duration=\"2776000\" />\n      <workItem from=\"1767467621266\" duration=\"371000\" />\n      <workItem from=\"1767965365628\" duration=\"1361000\" />\n      <workItem from=\"1767966793914\" duration=\"2363000\" />\n      <workItem from=\"1768981268786\" duration=\"827000\" />\n      <workItem from=\"1769515007924\" duration=\"5482000\" />\n      <workItem from=\"1769522923736\" duration=\"12742000\" />\n      <workItem from=\"1769596176126\" duration=\"1673000\" />\n      <workItem from=\"1769604161101\" duration=\"746000\" />\n      <workItem from=\"1769604912905\" duration=\"2144000\" />\n      <workItem from=\"1769625192667\" duration=\"1103000\" />\n      <workItem from=\"1769701838537\" duration=\"653000\" />\n      <workItem from=\"1769702529870\" duration=\"3259000\" />\n      <workItem from=\"1770841850344\" duration=\"65000\" />\n      <workItem from=\"1771964148281\" duration=\"890000\" />\n      <workItem from=\"1771965104382\" duration=\"100000\" />\n      <workItem from=\"1773741208537\" duration=\"1548000\" />\n      <workItem from=\"1773742764353\" duration=\"1085000\" />\n      <workItem from=\"1773743894466\" duration=\"143000\" />\n      <workItem from=\"1773744093793\" duration=\"76000\" />\n      <workItem from=\"1773744174690\" duration=\"7447000\" />\n      <workItem from=\"1773753039326\" duration=\"2462000\" />\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"init commit\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1773746284878</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1773746284878</updated>\n    </task>\n    <task id=\"LOCAL-00002\" summary=\"Heat map ternary diagram for a/c-path rectification of zeotrope mixture\">\n      <option name=\"closed\" value=\"true\" />\n      <created>1773749019557</created>\n      <option name=\"number\" value=\"00002\" />\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1773749019557</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"3\" />\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"3\" />\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"init commit\" />\n    <MESSAGE value=\"Heat map ternary diagram for a/c-path rectification of zeotrope mixture\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Heat map ternary diagram for a/c-path rectification of zeotrope mixture\" />\n  </component>\n  <component name=\"com.intellij.coverage.CoverageDataManagerImpl\">\n    <SUITE FILE_PATH=\"coverage/ComputetionalProcessEngineering$Ubung3_2.coverage\" NAME=\"Ubung3.2 Coverage Results\" MODIFIED=\"1763131031904\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$\" />\n    <SUITE FILE_PATH=\"coverage/ComputetionalProcessEngineering$mid1.coverage\" NAME=\"mid1 Coverage Results\" MODIFIED=\"1767966802405\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$\" />\n    <SUITE FILE_PATH=\"coverage/ComputetionalProcessEngineering$mid1_1.coverage\" NAME=\"mid1_1 Coverage Results\" MODIFIED=\"1769624362755\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$\" />\n    <SUITE FILE_PATH=\"coverage/ComputetionalProcessEngineering$Ternary_Heat_Map_Diagram.coverage\" NAME=\"Ternary Heat Map Diagram Coverage Results\" MODIFIED=\"1773754605317\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$\" />\n    <SUITE FILE_PATH=\"coverage/ComputetionalProcessEngineering$WaterGas_Shift_Reaction.coverage\" NAME=\"Water–Gas Shift Reaction Coverage Results\" MODIFIED=\"1773748241626\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$\" />\n    <SUITE FILE_PATH=\"coverage/ComputetionalProcessEngineering$Ubung3_1.coverage\" NAME=\"Ubung3.1 Coverage Results\" MODIFIED=\"1764259281545\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$\" />\n    <SUITE FILE_PATH=\"coverage/ComputetionalProcessEngineering$VLE.coverage\" NAME=\"VLE Coverage Results\" MODIFIED=\"1773748071904\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$\" />\n    <SUITE FILE_PATH=\"coverage/ComputetionalProcessEngineering$Energy_demand.coverage\" NAME=\"Energy demand Coverage Results\" MODIFIED=\"1773755266041\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$\" />\n    <SUITE FILE_PATH=\"coverage/ComputetionalProcessEngineering$Ubung3.coverage\" NAME=\"Ubung3 Coverage Results\" MODIFIED=\"1763129271245\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$\" />\n    <SUITE FILE_PATH=\"coverage/ComputetionalProcessEngineering$mid2_1.coverage\" NAME=\"mid2_1 Coverage Results\" MODIFIED=\"1773743899886\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$\" />\n    <SUITE FILE_PATH=\"coverage/ComputetionalProcessEngineering$Practice2_Solution.coverage\" NAME=\"Practice2.Solution Coverage Results\" MODIFIED=\"1764259261453\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$\" />\n    <SUITE FILE_PATH=\"coverage/ComputetionalProcessEngineering$Ubung1.coverage\" NAME=\"Ubung1 Coverage Results\" MODIFIED=\"1761310689451\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$\" />\n    <SUITE FILE_PATH=\"coverage/ComputetionalProcessEngineering$mid2.coverage\" NAME=\"mid2 Coverage Results\" MODIFIED=\"1769517219551\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision e8bdf0fe1666d94877611ba33f2a4092e3add7cc)
++++ b/.idea/workspace.xml	(date 1784106933454)
+@@ -4,10 +4,14 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="6de7d937-5b2f-4a9a-b407-edcd949c4b58" name="Changes" comment="Heat map ternary diagram for a/c-path rectification of zeotrope mixture">
+-      <change afterPath="$PROJECT_DIR$/Energy demand.py" afterDir="false" />
++    <list default="true" id="6de7d937-5b2f-4a9a-b407-edcd949c4b58" name="Changes" comment="Biomass conversion on spherical particle surface using mass transport, convertion and reaction rate equations">
++      <change afterPath="$PROJECT_DIR$/McCabe Thiele Diagram.py" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/VLE.py" beforeDir="false" afterPath="$PROJECT_DIR$/Ternary Heat Map Diagram.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/CO2 Removal/breakthrough_curve.png" beforeDir="false" afterPath="$PROJECT_DIR$/CO2 Removal/breakthrough_curve.png" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/CO2 Removal/loading_freundlich.png" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/CO2 Removal/loading_linear.png" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/CO2 Removal/seminar 5.py" beforeDir="false" afterPath="$PROJECT_DIR$/CO2 Removal/seminar 5.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/Ternary Heat Map Diagram.py" beforeDir="false" afterPath="$PROJECT_DIR$/Ternary Heat Map Diagram.py" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -22,6 +26,11 @@
+     </option>
+   </component>
+   <component name="Git.Settings">
++    <option name="RECENT_BRANCH_BY_REPOSITORY">
++      <map>
++        <entry key="$PROJECT_DIR$" value="main" />
++      </map>
++    </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+   <component name="GitHubPullRequestSearchHistory">{
+@@ -49,7 +58,9 @@
+   </component>
+   <component name="PropertiesComponent"><![CDATA[{
+   "keyToString": {
++    "Python.Biomass_conversion.executor": "Run",
+     "Python.Energy demand.executor": "Run",
++    "Python.McCabe Thiele Diagram.executor": "Run",
+     "Python.Practice2.Solution.executor": "Run",
+     "Python.Ternary Heat Map Diagram.executor": "Run",
+     "Python.Ubung1.executor": "Run",
+@@ -62,9 +73,10 @@
+     "Python.mid1_1.executor": "Run",
+     "Python.mid2.executor": "Run",
+     "Python.mid2_1.executor": "Run",
++    "Python.seminar 5.executor": "Run",
+     "RunOnceActivity.ShowReadmeOnStart": "true",
+     "RunOnceActivity.git.unshallow": "true",
+-    "git-widget-placeholder": "main",
++    "git-widget-placeholder": "updated",
+     "node.js.detected.package.eslint": "true",
+     "node.js.detected.package.tslint": "true",
+     "node.js.selected.package.eslint": "(autodetect)",
+@@ -75,11 +87,12 @@
+ }]]></component>
+   <component name="RecentsManager">
+     <key name="MoveFile.RECENT_KEYS">
++      <recent name="$PROJECT_DIR$/Biomass convertion" />
+       <recent name="$PROJECT_DIR$" />
+       <recent name="$PROJECT_DIR$/.venv" />
+     </key>
+   </component>
+-  <component name="RunManager" selected="Python.Ternary Heat Map Diagram">
++  <component name="RunManager">
+     <configuration name="Energy demand" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+       <module name="ComputetionalProcessEngineering" />
+       <option name="ENV_FILES" value="" />
+@@ -174,8 +187,8 @@
+     </configuration>
+     <recent_temporary>
+       <list>
++        <item itemvalue="Python.Energy demand" />
+         <item itemvalue="Python.Ternary Heat Map Diagram" />
+-        <item itemvalue="Python.Energy demand" />
+         <item itemvalue="Python.Water–Gas Shift Reaction" />
+         <item itemvalue="Python.Reaction rate computation" />
+       </list>
+@@ -222,7 +235,15 @@
+       <workItem from="1773743894466" duration="143000" />
+       <workItem from="1773744093793" duration="76000" />
+       <workItem from="1773744174690" duration="7447000" />
+-      <workItem from="1773753039326" duration="2462000" />
++      <workItem from="1773753039326" duration="4548000" />
++      <workItem from="1773760716435" duration="274000" />
++      <workItem from="1773823228353" duration="2143000" />
++      <workItem from="1773828118906" duration="1196000" />
++      <workItem from="1780242381562" duration="1173000" />
++      <workItem from="1780845365448" duration="287000" />
++      <workItem from="1781111602210" duration="229000" />
++      <workItem from="1783959972125" duration="944000" />
++      <workItem from="1784101124696" duration="3933000" />
+     </task>
+     <task id="LOCAL-00001" summary="init commit">
+       <option name="closed" value="true" />
+@@ -240,7 +261,55 @@
+       <option name="project" value="LOCAL" />
+       <updated>1773749019557</updated>
+     </task>
+-    <option name="localTasksCounter" value="3" />
++    <task id="LOCAL-00003" summary="Heat map ternary diagram for a/c-path rectification of zeotrope mixture">
++      <option name="closed" value="true" />
++      <created>1773755603043</created>
++      <option name="number" value="00003" />
++      <option name="presentableId" value="LOCAL-00003" />
++      <option name="project" value="LOCAL" />
++      <updated>1773755603043</updated>
++    </task>
++    <task id="LOCAL-00004" summary="Heat map ternary diagram for a/c-path rectification of zeotrope mixture">
++      <option name="closed" value="true" />
++      <created>1773755642781</created>
++      <option name="number" value="00004" />
++      <option name="presentableId" value="LOCAL-00004" />
++      <option name="project" value="LOCAL" />
++      <updated>1773755642781</updated>
++    </task>
++    <task id="LOCAL-00005" summary="Biomass conversion on spherical particle surface using mass transport, convertion and reaction rate equations">
++      <option name="closed" value="true" />
++      <created>1780242737491</created>
++      <option name="number" value="00005" />
++      <option name="presentableId" value="LOCAL-00005" />
++      <option name="project" value="LOCAL" />
++      <updated>1780242737491</updated>
++    </task>
++    <task id="LOCAL-00006" summary="Biomass conversion on spherical particle surface using mass transport, convertion and reaction rate equations">
++      <option name="closed" value="true" />
++      <created>1780243098878</created>
++      <option name="number" value="00006" />
++      <option name="presentableId" value="LOCAL-00006" />
++      <option name="project" value="LOCAL" />
++      <updated>1780243098878</updated>
++    </task>
++    <task id="LOCAL-00007" summary="Biomass conversion on spherical particle surface using mass transport, convertion and reaction rate equations">
++      <option name="closed" value="true" />
++      <created>1783960616989</created>
++      <option name="number" value="00007" />
++      <option name="presentableId" value="LOCAL-00007" />
++      <option name="project" value="LOCAL" />
++      <updated>1783960616989</updated>
++    </task>
++    <task id="LOCAL-00008" summary="Biomass conversion on spherical particle surface using mass transport, convertion and reaction rate equations">
++      <option name="closed" value="true" />
++      <created>1783960701414</created>
++      <option name="number" value="00008" />
++      <option name="presentableId" value="LOCAL-00008" />
++      <option name="project" value="LOCAL" />
++      <updated>1783960701414</updated>
++    </task>
++    <option name="localTasksCounter" value="9" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -248,22 +317,27 @@
+   </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="init commit" />
++    <MESSAGE value="Heat map ternary diagrams for a,c and a/c-path rectification of zeotrope mixture" />
+     <MESSAGE value="Heat map ternary diagram for a/c-path rectification of zeotrope mixture" />
+-    <option name="LAST_COMMIT_MESSAGE" value="Heat map ternary diagram for a/c-path rectification of zeotrope mixture" />
++    <MESSAGE value="Biomass conversion on spherical particle surface using mass transport, convertion and reaction rate equations" />
++    <option name="LAST_COMMIT_MESSAGE" value="Biomass conversion on spherical particle surface using mass transport, convertion and reaction rate equations" />
+   </component>
+   <component name="com.intellij.coverage.CoverageDataManagerImpl">
++    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$McCabe_Thiele_Diagram.coverage" NAME="McCabe Thiele Diagram Coverage Results" MODIFIED="1773827371711" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
++    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Biomass_conversion.coverage" NAME="Biomass_conversion Coverage Results" MODIFIED="1780242422185" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ubung3_2.coverage" NAME="Ubung3.2 Coverage Results" MODIFIED="1763131031904" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$mid1.coverage" NAME="mid1 Coverage Results" MODIFIED="1767966802405" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$mid1_1.coverage" NAME="mid1_1 Coverage Results" MODIFIED="1769624362755" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+-    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ternary_Heat_Map_Diagram.coverage" NAME="Ternary Heat Map Diagram Coverage Results" MODIFIED="1773754605317" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+-    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$WaterGas_Shift_Reaction.coverage" NAME="Water–Gas Shift Reaction Coverage Results" MODIFIED="1773748241626" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
++    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ternary_Heat_Map_Diagram.coverage" NAME="Ternary Heat Map Diagram Coverage Results" MODIFIED="1780242410852" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
++    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$WaterGas_Shift_Reaction.coverage" NAME="Water–Gas Shift Reaction Coverage Results" MODIFIED="1780243066371" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ubung3_1.coverage" NAME="Ubung3.1 Coverage Results" MODIFIED="1764259281545" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$VLE.coverage" NAME="VLE Coverage Results" MODIFIED="1773748071904" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+-    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Energy_demand.coverage" NAME="Energy demand Coverage Results" MODIFIED="1773755266041" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
++    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Energy_demand.coverage" NAME="Energy demand Coverage Results" MODIFIED="1783960050396" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ubung3.coverage" NAME="Ubung3 Coverage Results" MODIFIED="1763129271245" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$mid2_1.coverage" NAME="mid2_1 Coverage Results" MODIFIED="1773743899886" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Practice2_Solution.coverage" NAME="Practice2.Solution Coverage Results" MODIFIED="1764259261453" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$Ubung1.coverage" NAME="Ubung1 Coverage Results" MODIFIED="1761310689451" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+     <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$mid2.coverage" NAME="mid2 Coverage Results" MODIFIED="1769517219551" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
++    <SUITE FILE_PATH="coverage/ComputetionalProcessEngineering$seminar_5.coverage" NAME="seminar 5 Coverage Results" MODIFIED="1784106541876" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/CO2 Removal" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: McCabe Thiele Diagram.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/McCabe Thiele Diagram.py b/McCabe Thiele Diagram.py
+new file mode 100644
+--- /dev/null	(date 1773827300910)
++++ b/McCabe Thiele Diagram.py	(date 1773827300910)
+@@ -0,0 +1,106 @@
++import numpy as np
++import matplotlib.pyplot as plt
++from scipy.optimize import newton
++
++# =========================
++# Antoine parameters
++# (DMC, EMC)
++# =========================
++A = np.array([9.3251, 9.2876])
++B = np.array([1348.18, 1388.10])
++C = np.array([-51.1717, -56.8825])
++
++P_total = 101325  # Pa
++
++
++# =========================
++# Antoine
++# =========================
++def p_sat(T):
++    return 10 ** (A - B / (C + T))
++
++
++# =========================
++# Bubble temperature solver
++# =========================
++def bubble_T(x):
++    def f(T):
++        return P_total - np.sum(x * p_sat(T))
++
++    def df(T):
++        ps = p_sat(T)
++        return -np.sum(x * ps * np.log(10) * (B / (C + T)**2))
++
++    T0 = np.dot(x, [363, 390])  # initial guess
++
++    try:
++        return newton(f, T0, fprime=df, tol=1e-6, maxiter=50)
++    except:
++        return None
++
++
++# =========================
++# Vapor composition
++# =========================
++def vapor_y(x, T):
++    ps = p_sat(T)
++    y = x * ps / P_total
++    return y / np.sum(y)
++
++
++# =========================
++# Generate 6 test points
++# =========================
++def generate_points():
++    x_vals = np.linspace(0.05, 0.95, 6)
++
++    T_vals = []
++    y_vals = []
++
++    for x1 in x_vals:
++        x = np.array([x1, 1 - x1])
++
++        T = bubble_T(x)
++        if T is None:
++            continue
++
++        y = vapor_y(x, T)
++
++        T_vals.append(T)
++        y_vals.append(y[0])  # vapor fraction of component 1
++
++    return x_vals, np.array(T_vals), np.array(y_vals)
++
++
++# =========================
++# Plot T-x-y diagram
++# =========================
++def plot_txy(x, T, y):
++    plt.figure(figsize=(7,6))
++
++    # Bubble line
++    plt.plot(x, T, 'o-', label='Bubble line (x)')
++
++    # Dew line
++    plt.plot(y, T, 's-', label='Dew line (y)')
++
++    plt.xlabel('Mole fraction (DMC)')
++    plt.ylabel('Temperature (K)')
++    plt.title('T-x-y Diagram (DMC–EMC)')
++    plt.legend()
++    plt.grid()
++
++    plt.show()
++
++
++# =========================
++# MAIN
++# =========================
++if __name__ == "__main__":
++    x, T, y = generate_points()
++
++    print("x:", x)
++    print("T:", T)
++    print("y:", y)
++
++    plot_txy(x, T, y)
+\ No newline at end of file

@@ -24,29 +24,24 @@ t_end = 30000.0
 t_eval = np.linspace(t_start, t_end, 400)
 
 
-def calculate_model_coefficients(isotherm):
+def calculate_model_coefficients(isotherm, c):
     if isotherm == "linear":
-        dXdc_for_Deff = 4.715
-        dXdc_for_loading = 4.715
+        dXdc = 4.715 * np.ones_like(c)
 
     elif isotherm == "freundlich":
-        dXdc_for_Deff = 82.68 * np.sqrt(cin)
-        dXdc_for_loading = 82.68 * np.sqrt(cin) / cin
+        dXdc = 82.68 * np.sqrt(cin) / cin * c
 
     else:
         raise ValueError("Unknown isotherm. Use 'linear' or 'freundlich'.")
 
-    K = rho_s / eps_p * dXdc_for_Deff
+    K = rho_s / eps_p * dXdc
     Deff = D / (1.0 + K)
 
     k1 = (1.0 - eps_bed) / eps_bed * rho_s
+    k2 = 15.0 * Deff / (Rp**2) * dXdc
     k3 = 15.0 * Deff / (Rp**2)
-    k2 = k3 * dXdc_for_loading
 
-    a1 = -u / eps_bed
-    b1 = Dax
-
-    return dXdc_for_loading, Deff, k1, k2, k3, a1, b1
+    return dXdc, Deff, k1, k2, k3
 
 
 def build_matrices(a1, b1):
@@ -79,10 +74,11 @@ def build_matrices(a1, b1):
 
     return M1, M2, d1, d2
 
-
-def ode_system(t, y, M1, M2, d1, d2, k1, k2, k3):
+def ode_system(t, y, M1, M2, d1, d2, isotherm):
     c = y[:n]
     X = y[n:]
+
+    dXdc, Deff, k1, k2, k3 = calculate_model_coefficients(isotherm, c)
 
     dXdt = k2 * c - k3 * X
 
@@ -92,9 +88,9 @@ def ode_system(t, y, M1, M2, d1, d2, k1, k2, k3):
 
     return np.concatenate([dcdt, dXdt])
 
-
 def solve_fixed_bed(isotherm):
-    dXdc, Deff, k1, k2, k3, a1, b1 = calculate_model_coefficients(isotherm)
+    a1 = -u / eps_bed
+    b1 = Dax
 
     M1, M2, d1, d2 = build_matrices(a1, b1)
 
@@ -106,7 +102,7 @@ def solve_fixed_bed(isotherm):
         ode_system,
         (t_start, t_end),
         y_initial,
-        args=(M1, M2, d1, d2, k1, k2, k3),
+        args=(M1, M2, d1, d2, isotherm),
         method="BDF",
         t_eval=t_eval,
         rtol=1e-6,
@@ -120,7 +116,7 @@ def solve_fixed_bed(isotherm):
     X_solution = solution.y[n:, :]
 
     c_full = np.vstack([cin * np.ones(solution.t.size), c_solution])
-    X_full = np.vstack([dXdc * cin * np.ones(solution.t.size), X_solution])
+    X_full = np.vstack([np.zeros(solution.t.size), X_solution])
 
     return {
         "isotherm": isotherm,
@@ -128,17 +124,11 @@ def solve_fixed_bed(isotherm):
         "z": z,
         "c": c_full,
         "X": X_full,
-        "dXdc": dXdc,
-        "Deff": Deff,
-        "k1": k1,
-        "k2": k2,
-        "k3": k3,
         "M1": M1,
         "M2": M2,
         "d1": d1,
         "d2": d2
     }
-
 
 results = {}
 
@@ -148,12 +138,7 @@ for isotherm in ["linear", "freundlich"]:
 
 for isotherm, result in results.items():
     print(f"\nIsotherm: {isotherm}")
-    print(f"dXdc = {result['dXdc']:.6e} m3/kg")
-    print(f"Deff = {result['Deff']:.6e} m2/s")
-    print(f"k1   = {result['k1']:.6e}")
-    print(f"k2   = {result['k2']:.6e}")
-    print(f"k3   = {result['k3']:.6e}")
-
+    print("Calculation finished.")
 
 times_to_plot = np.arange(t_start, t_end + 1.0, 3000.0)
 
